@@ -66,6 +66,68 @@ npx @colmbyrne/specflow init .   # contracts, hooks, writer/auditor/uplifter/sim
 
 ---
 
+## Front end: from a discovery chat to a hardened PRD (dueling subagents)
+
+The loop above starts at "draft the PRD" — but in practice you rarely start *with* a PRD. You
+start with a **conversation**. The most reliable way in is to **discover in chat, then collapse
+the draft + the adversary into one dueling move** seeded with that context.
+
+**1. Discover against a real artifact.** Point the agent at the actual thing — a third-party
+Excel export, an API response, a legacy table — and think out loud. The agent reads the *real
+file*; you push on what matters:
+
+```
+You:    Here's a Timetastic export (HR / leave data) we have to import. Look at it.
+Codex:  [reads the sheets] Leave has Booking Total / Total Working / Total Deducted;
+        Work Schedules has effective-dated patterns; ~31% of rows have working != booking.
+You:    How do we pull this in AND prove provenance — never silently accept a bad row?
+You:    And every imported figure must be explainable: where did "Mary: 20 days" come from?
+Codex:  [proposes external-id + row-hash idempotency; a provenance row per record;
+        a reconciliation report; explainability = show the source row + the exact math]
+You:    Good. What breaks it? Duplicate emails? A schedule change mid-year?
+... (the real design forms here — in the chat, against the real data) ...
+```
+
+This is where the insight actually happens. The agent has now *seen the real file*, so anything
+it writes later is grounded, not guessed.
+
+**2. Collapse draft + adversary into one dueling move.** When the design has taken shape, don't
+ask for "a PRD." Ask for the **dueling loop**, seeded with everything you just discussed:
+
+> Take everything we worked out and produce a PRD — but run it as **two subagents in a dueling
+> loop**:
+> - **Agent A (writer)** drafts the PRD, grounding *every concrete claim in the actual file we
+>   inspected* (real columns, real row counts, real edge cases).
+> - **Agent B (adversary)** uses the **adversarial-prd-reviewer skill** — the 7-pass rubric *and
+>   the Special Mandate* (this touches import / provenance / explainability) — and attacks A's
+>   draft round after round.
+>
+> A revises in the document; B re-reads and closes; repeat until **SHIP / SHIP WITH
+> STIPULATIONS**. Output the hardened PRD, the issue ledger, and the verdict.
+
+**3. What you get back** isn't a first draft — it's a PRD the adversary already hardened. On the
+import example, B typically catches:
+- **Explainability is a fork (DRY/loophole):** "show the math" is written as a *separate
+  narrative*, not derived from the import code → it will drift. Fix: the explanation is emitted
+  by the *same code* that computes the figure.
+- **No-data loophole:** the import test uses a mock workbook, so the parser is never exercised
+  against the real shape. Fix: a redacted *real* sample.
+- **Provenance gap:** "we record provenance" — for *which* mutations? manual edits and system
+  jobs unmentioned. Fix: enumerate every write path.
+- **Reality-grounding:** "the sheet has column X with N rows" — B opens the *actual file you
+  inspected* and confirms or kills the claim.
+
+From there it's the normal pipeline: **Specflow writer → auditor/uplift → simulation → defensible
+epics**. You went from *"look at this Excel"* to a defensible, adversary-survived PRD without ever
+hand-writing a spec — and the discovery context is what made the writer's claims real.
+
+**Why dueling-from-discovery beats write-then-review:** the writer inherits the whole chat (the
+real file, the edge cases you already surfaced), so its first draft is already grounded; and the
+adversary attacks *while* it's being written, so loopholes never settle in. One move, hardened
+output.
+
+---
+
 ## Worked scenarios
 
 Each is a realistic thing people build — usually **with a repo already in flight** — showing the
