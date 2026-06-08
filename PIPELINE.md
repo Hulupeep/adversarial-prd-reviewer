@@ -6,8 +6,8 @@ they survived a hostile review, their gaps are named with owners, and nothing pr
 done that isn't.
 
 It pairs with **[Specflow](https://github.com/Hulupeep/Specflow)** — install that as the
-companion that turns the hardened spec into tickets and keeps them *enforceable forever*
-(contracts + journey tests + CI gates).
+companion that turns the hardened spec into tickets and **bakes the truth in** (contracts +
+journey tests + CI gates that enforce it on every build, forever).
 
 ---
 
@@ -42,9 +42,10 @@ companion that turns the hardened spec into tickets and keeps them *enforceable 
       buildable · honest · UNRESOLVED items flagged — not perfect, defensible
 ```
 
-**Why this order:** the adversary makes the spec *correct and honest* up front; Specflow makes
-it *enforceable* forever; the simulation proves it *works for a real user* before a line of
-code. Skip step 2 and you get perfectly compliant tickets for the wrong thing.
+**Why this order:** **the adversary makes the spec honest to begin with; Specflow bakes the truth
+in** — contracts + journey tests enforce it on every build, so it can't drift back. (And the
+simulation proves it works for a real user before a line of code.) Skip step 2 and you get
+perfectly compliant tickets for the wrong thing.
 
 ---
 
