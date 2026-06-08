@@ -15,6 +15,11 @@ It does two jobs the usual "looks good 👍" review never does:
 > A spec can be perfectly *buildable* and still be a silent lie with a green checkmark on it.
 > This skill is built to catch both.
 
+**👉 New here? Read [PIPELINE.md](./PIPELINE.md)** — the full practice with *worked examples*
+(real products, copy-paste prompts for **Codex** and **Claude**), what happens *after* the
+adversary catches something, and how it feeds **[Specflow](https://github.com/Hulupeep/Specflow)**
+to end at GitHub epics & issues that are **defensible, not perfect**.
+
 ---
 
 ## How it works
@@ -107,6 +112,7 @@ The Mandate forces the reviewer to verify against reality and to refuse the chea
 
 | File | What it is |
 |------|------------|
+| `PIPELINE.md` | The full end-to-end practice + worked examples (prompts, catches, Specflow handoff). |
 | `SKILL.md` | The skill entry point: operating modes + required references. |
 | `references/review-rubric.md` | The 7-pass rubric, severities, banned language, Ramen test, Specflow/multicheck, verdicts. |
 | `references/dueling-protocol.md` | The A-writes / B-attacks runbook: roles, round cycle, issue ledger, termination. |
