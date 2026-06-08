@@ -1,0 +1,4 @@
+interface:
+  display_name: "Adversarial PRD Reviewer"
+  short_description: "Stress-test PRDs until they are buildable"
+  default_prompt: "Use $adversarial-prd-reviewer to interrogate this PRD and force it into a defensible, buildable spec."
