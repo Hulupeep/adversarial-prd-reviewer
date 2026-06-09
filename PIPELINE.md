@@ -1,5 +1,10 @@
 # The Full Pipeline — from rough idea to *defensible* epics
 
+> **Canonical reference:** [`PROCESS.md`](./PROCESS.md) is the single source of truth for the
+> end-to-end practice (Steps 0–7, Gates A/B/B.5/C, the 5-rail build loop, the honesty rule).
+> This file covers the adversary's slice of it (the PRD → defensible-tickets front half) in more
+> depth. When the two differ, PROCESS.md wins.
+
 This shows how the Adversarial PRD Reviewer fits into an end-to-end practice that turns a rough
 idea (or a half-built repo) into **GitHub epics and issues that are defensible, not perfect** —
 they survived a hostile review, their gaps are named with owners, and nothing pretends to be
