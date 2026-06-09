@@ -9,9 +9,10 @@ Companion to [`PROCESS.md`](./PROCESS.md) and the loop docs. Claude Code runs th
 | The tick (what re-prompts) | `Workflow` / `/loop` | **automation** (schedule or thread trigger) |
 | Durable state across iterations | in-run memory + journal | **the thread** + committed artifacts in the repo |
 | Stop condition | `while` / `done_when` | **goal** (its done-criteria) |
-| One iteration's instructions | the driver prompt | the automation's prompt (below) |
+| The path (stages/gates/repair) | `QA/loops/*.yaml` | **same `QA/loops/*.yaml`** — reused as-is |
+| One iteration's instructions | thin prompt → the YAML path | **thin automation prompt → the same YAML path** |
 
-So: **stop thinking "loop," start thinking "tick + a self-locating driver + a goal."** Each automation run is *one* iteration. The prompt must first ask *"where am I?"* (by reading real state), advance exactly **one gate**, persist the result to a real artifact, then stop / escalate / wait for the next tick.
+So: **stop thinking "loop," start thinking "tick + a self-locating driver + a goal."** The *path* never lives in the prompt — it lives in [`QA/loops/spec-build.yaml`](QA/loops/spec-build.yaml) and [`QA/loops/feature-build.yaml`](QA/loops/feature-build.yaml). The automation prompt is **thin**: goal + inputs + automation, then "follow the path." Each run is *one* iteration that asks *"where am I?"* (by reading real state + the path), advances exactly **one gate**, persists to a real artifact, then stops / escalates / waits for the next tick. The YAML is the source of truth; if this doc ever disagrees with it, the YAML wins.
 
 Because state lives in **committed artifacts** (the verdict file, journey contracts, the evidence note, ticket status) — never just in chat — this is *more* honest than an in-memory loop: it can't "remember" a green it never proved. That is the honesty rule, enforced by the architecture.
 
@@ -36,6 +37,7 @@ Then create the three automations below, each with the matching goal.
 
 ## Automation 1 — Spec-build (goal: hardened PRD + defensible tickets)
 
+**Path:** `QA/loops/spec-build.yaml` (the prompt below follows it; it does not restate it).
 **Goal / done-criteria:** a committed verdict artifact says `SHIP` (or `SHIP WITH STIPULATIONS`) and specflow-audited tickets exist for `<X>`.
 **Trigger:** thread automation (re-enters the same thread until the goal is met).
 
@@ -56,6 +58,7 @@ Then create the three automations below, each with the matching goal.
 
 ## Automation 2 — Feature-build (goal: ticket merged via Gate C)
 
+**Path:** `QA/loops/feature-build.yaml` (the prompt below follows it; it does not restate it).
 **Goal / done-criteria:** branch for `#<issue>` is green on branch-protected CI and merged (or ready-for-review with CI green).
 **Trigger:** thread automation per ticket; interval matched to CI duration.
 

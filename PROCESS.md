@@ -78,10 +78,15 @@ The controller-enforced gates (A, B, B.5) catch most things. But even a *gamed* 
 
 ## Runnable form — the loops
 
-This process runs as two paired loops plus a meta loop (driver prompts + contracts in `QA/`):
+This process runs as two paired loops plus a meta loop. Each loop is split in two:
 
-- **Spec-build loop** = Steps 0–5 (discover → dueling PRD → **Gate A** → tickets → **Gate B/B.5**). Output: defensible tickets.
-- **Feature-build loop** = Step 6 (5 rails) → **Gate C**. Output: a tested slice that survived CI.
-- **Mistake-harvest loop** (meta) reads runs of both, finds skipped gates, and updates the skills/contracts the loops depend on.
+- **The PATH** — a reusable `.yaml` (the stages, gates, repair, `done_when`). Written once, story-agnostic.
+- **The PROMPT** — thin and per-story: it only supplies *goal + inputs + automation* and says "follow the path." It does **not** restate the stages.
 
-The loops are how you *design loops that prompt your agents* instead of hand-prompting each step. The gates above are why the loops are trustworthy: the muscle never approves its own work.
+| Loop | Executable path (the YAML) | Explainer (prose) | Covers |
+|------|----------------------------|-------------------|--------|
+| **Spec-build** | [`QA/loops/spec-build.yaml`](QA/loops/spec-build.yaml) | [`QA/spec-build-loop.md`](QA/spec-build-loop.md) | Steps 0–5: discover → dueling PRD → **Gate A** → tickets → **Gate B/B.5** → defensible tickets |
+| **Feature-build** | [`QA/loops/feature-build.yaml`](QA/loops/feature-build.yaml) | [`QA/feature-build-loop.md`](QA/feature-build-loop.md) | Step 6 (5 rails) → **Gate C** → a tested slice that survived CI |
+| **Mistake-harvest** (meta) | — (scheduled routine) | `docs/routines/daily-mistake-harvest.md` (timebreez) | reads runs of both, finds skipped gates, updates the skills/contracts the loops depend on |
+
+A loop is **path + thin prompt + automation (the tick) + durable state (committed artifacts)**. The YAML is the source of truth; if a prose explainer ever disagrees with it, the YAML wins. The gates are why the loops are trustworthy: the muscle never approves its own work. (To run in Codex, see [`PROCESS-CODEX.md`](PROCESS-CODEX.md).)
