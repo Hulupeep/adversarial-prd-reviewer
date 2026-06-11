@@ -88,7 +88,8 @@ This process runs as two paired loops plus a meta loop. Each loop is split in tw
 |------|----------------------------|-------------------|--------|
 | **Spec-build** | [`QA/loops/spec-build.yaml`](QA/loops/spec-build.yaml) | [`QA/spec-build-loop.md`](QA/spec-build-loop.md) | Steps 0–5: discover → dueling PRD → **Gate A** → tickets → **Gate B/B.5** → defensible tickets |
 | **Feature-build** | [`QA/loops/feature-build.yaml`](QA/loops/feature-build.yaml) | [`QA/feature-build-loop.md`](QA/feature-build-loop.md) | Step 6 (5 rails) → **Gate C** → a tested slice that survived CI |
-| **Mistake-harvest** (meta) | — (scheduled routine) | `docs/routines/daily-mistake-harvest.md` (timebreez) | reads runs of both, finds skipped gates, updates the skills/contracts the loops depend on |
+| **Daily-use-teardown** (front door for already-built products) | [`QA/loops/daily-use-teardown.yaml`](QA/loops/daily-use-teardown.yaml) | — | investigate the live app's journeys → **HITL: human confirms the map (hash-bound sign-off)** → judge-tier persona walks (WORKS/CONFUSING/BROKEN, screenshot evidence) → prioritized do-list → feeds spec-build as `grounding_ref` |
+| **Mistake-harvest** (meta) | — (scheduled routine) | `docs/routines/daily-mistake-harvest.md` (timebreez) | reads runs of the loops, finds skipped gates, updates the skills/contracts the loops depend on |
 
 A loop is **path + thin prompt + automation (the tick) + durable state (committed artifacts)**. The YAML is the source of truth; if a prose explainer ever disagrees with it, the YAML wins. The gates are why the loops are trustworthy: the muscle never approves its own work.
 
